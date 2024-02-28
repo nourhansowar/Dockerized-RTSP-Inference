@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  rtsp-server:
+    image: aler9/rtsp-simple-server:v1.3.0
+    volumes:
+      - ./rtsp-simple-server.yml:/rtsp-simple-server.yml
+    ports:
+      - "8554:8554"
+    networks:
+      - my-network
+
+  ffmpeg-converter:
+    build:
+      context: .
+      dockerfile: Dockerfile-ffmpeg # Path to your ffmpeg Dockerfile
+    command: ffmpeg -re -stream_loop -1 -i /app/people.mp4 -f rtsp -rtsp_transport tcp rtsp://rtsp-server:8554/live.stream
+    volumes:
+      - ./people.mp4:/app/people.mp4
+    networks:
+      - my-network
+  flask-app:
+    build:
+      context: .
+      dockerfile: Dockerfile-flask
+    ports:
+      - "5000:5000"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+
