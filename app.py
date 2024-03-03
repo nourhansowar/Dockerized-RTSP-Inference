@@ -85,7 +85,7 @@ if __name__ == '__main__':
     try:
         # Initialize RTSP video capture object (replace with your stream URL)
         #cap = cv2.VideoCapture('localhost:8554/live.stream')
-        cap = cv2.VideoCapture('rtsp://192.168.1.43:8554/live.stream')
+        cap = cv2.VideoCapture('rtsp://localhost:8554/live.stream')
 
         # Check if stream is opened successfully
         if not cap.isOpened():

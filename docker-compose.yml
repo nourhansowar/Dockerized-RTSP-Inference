@@ -7,6 +7,9 @@ services:
       - ./rtsp-simple-server.yml:/rtsp-simple-server.yml
     ports:
       - "8554:8554"
+    environment:
+      RTSP_URL: rtsp://localhost:8554/live.stream  # Set the RTSP URL as an environment variable
+
     networks:
       - my-network
 
@@ -19,12 +22,18 @@ services:
       - ./people.mp4:/app/people.mp4
     networks:
       - my-network
+
   flask-app:
     build:
       context: .
       dockerfile: Dockerfile-flask
     ports:
       - "5000:5000"
+    environment:
+      RTSP_URL: ${RTSP_URL}  # Access the RTSP URL environment variable from rtsp-server container
+    depends_on:
+      - rtsp-server
+
     networks:
       - my-network
 
